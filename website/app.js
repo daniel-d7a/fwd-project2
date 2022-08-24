@@ -9,21 +9,23 @@ const date = document.getElementById("date");
 const temp = document.getElementById("temp");
 const content = document.getElementById("content");
 const textArea = document.getElementById("feelings");
+const locationToken = "863908c1e2b815";
 /**
  * End global variables
  * Start helper functions
  */
 
-async function getNowTemp(position) {
-  const lat = position.coords.latitude;
-  const lon = position.coords.longitude;
-
+async function getNowTemp() {
+  const zipCode = zip.value;
   const response = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
+    `https://api.openweathermap.org/data/2.5/weather?zip=${zipCode},us&appid=${apiKey}`
   );
 
   try {
     const temp = await response.json();
+
+    console.log(temp);
+
     globalTemp = temp.main.temp;
     console.log(globalTemp);
   } catch (error) {
@@ -31,22 +33,22 @@ async function getNowTemp(position) {
   }
 }
 
-function locationError() {
-  console.log("couldn't retrieve location");
-}
+// function locationError() {
+//   console.log("couldn't retrieve location");
+// }
 
-function getPosition(resolveParam, rejectParam) {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        resolve(resolveParam(position));
-      },
-      () => {
-        reject(rejectParam());
-      }
-    );
-  });
-}
+// function getPosition(resolveParam, rejectParam) {
+//   return new Promise((resolve, reject) => {
+//     navigator.geolocation.getCurrentPosition(
+//       (position) => {
+//         resolve(resolveParam(position));
+//       },
+//       () => {
+//         reject(rejectParam());
+//       }
+//     );
+//   });
+// }
 
 /**
  * End helper functions
@@ -65,7 +67,6 @@ async function postData(url, data) {
 
   try {
     const json = await response.json();
-    console.log("post json", json);
     return json;
   } catch (error) {
     console.log("error in postData", error);
@@ -77,7 +78,6 @@ async function getData(url) {
 
   try {
     const json = await response.json();
-    console.log("get json", json);
     return json;
   } catch (error) {
     console.log("error in postData", error);
@@ -94,9 +94,8 @@ what happens when we click the button?
 async function buttonClickHandler() {
   if (!navigator.geolocation) return;
 
-  getPosition(getNowTemp, locationError)
+  getNowTemp()
     .then(() => {
-      console.log(textArea.value);
       const data = {
         date: `${new Date().getFullYear()} / ${
           new Date().getMonth() + 1
@@ -107,11 +106,9 @@ async function buttonClickHandler() {
       return postData("/postEntry", data);
     })
     .then((postResData) => {
-      console.log("post res data", postResData);
       return getData("/getLatestEntry");
     })
     .then((getResData) => {
-      console.log("get res data", getResData);
       updateUi(getResData);
     });
 }
