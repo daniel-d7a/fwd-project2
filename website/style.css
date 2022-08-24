@@ -40,7 +40,7 @@ main > div {
   /* border: 1px solid red; */
 }
 
-.zip{
+.zip {
   display: flex;
   flex-flow: column nowrap;
   align-items: flex-start;
@@ -61,6 +61,7 @@ main > div {
   padding: 10px;
   font-family: inherit;
   border: none;
+  resize: none;
 }
 
 .feel textarea:focus,
@@ -113,26 +114,25 @@ footer {
 }
 
 @media screen and (min-width: 765px) {
-
-  body{
+  body {
     height: 100vh;
     overflow-y: hidden;
   }
-  #app{
+  #app {
     height: 100%;
   }
-  main{
+  main {
     height: 78vh;
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: flex-start;
   }
 
-  .feel{
+  .feel {
     width: 43%;
   }
 
-  .entry{
+  .entry {
     width: 50%;
     margin-left: 30px;
     height: 100%;
@@ -140,7 +140,6 @@ footer {
     padding-left: 20px;
   }
 }
-
 
 /* 
 main {
